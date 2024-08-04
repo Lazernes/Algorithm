@@ -20,9 +20,11 @@ public class Main {
             a[i] = tmp - 96;
         }
 
-        double result = 0;
+        long result = 0;
+        long pow = 1;
         for (int i = 0; i < L; i++) {
-            result = result + a[i] * Math.pow(r, i);
+            result = result + (a[i] * pow) % M;
+            pow = 31 * pow % M;
         }
 
         result = result % M;

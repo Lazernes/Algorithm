@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -46,6 +47,7 @@ public class Main {
         }
 
         Tree = new int[(int) Math.pow(2, k + 1)];
+        Arrays.fill(Tree, 1000000000);
 
         int index = (int) Math.pow(2, k);
         for (int i = 0; i < N; i++) {

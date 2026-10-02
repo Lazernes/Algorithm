@@ -2,71 +2,13 @@ import java.util.*;
 
 class Solution {
     
-    static int[] dx = {0, 0, 1, -1};
-    static int[] dy = {1, -1, 0, 0};
+    int answer;
+    int N;
+    int M;
     
-    static int[][] M;
-    static boolean[][] Visit;
-    static int n;
-    static int m;
-    
-    public int solution(int[][] maps) {
-        int answer = 0;
-        
-        n = maps.length;
-        m = maps[0].length;
-        
-        M = new int[n][m];
-        Visit = new boolean[n][m];
-        
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                M[i][j] = maps[i][j];
-            }
-        }
-        
-        BFS(0,0);
-        
-        if(!Visit[n - 1][m - 1]) {
-            answer = -1;
-        } else{
-            answer = M[n-1][m-1];
-        }
-        
-        return answer;
-    }
-    
-    static void BFS(int a, int b) {
-        Queue<Node> qu = new LinkedList<>();
-        qu.add(new Node(a,b));
-        Visit[a][b] = true;
-        
-        while(!qu.isEmpty()) {
-            Node currentNode = qu.poll();
-            int currentX = currentNode.a;
-            int currentY = currentNode.b;
-            
-            if(currentX == n - 1 && currentY == m - 1) {
-                break;
-            }
-            
-            for(int i=0;i<4;i++) {
-                int nextX = currentX + dx[i];
-                int nextY = currentY + dy[i];
-                
-                if(nextX >= 0 && nextX < n && nextY >=0 && nextY < m) {
-                    if(M[nextX][nextY] == 1 && !Visit[nextX][nextY]) {
-                        qu.add(new Node(nextX, nextY));
-                        Visit[nextX][nextY] = true;
-                        M[nextX][nextY] = M[currentX][currentY] + 1;
-                    }
-                }
-            }
-            
-        }
-        
-        
-    }
+    boolean[][] visited;
+    int[] x = {1, -1, 0, 0};
+    int[] y = {0, 0, 1, -1};
     
     static class Node {
         int a;
@@ -76,5 +18,63 @@ class Solution {
             this.a = a;
             this.b = b;
         }
+    }
+    
+    public int solution(int[][] maps) {
+        
+        N = maps.length;
+        M = maps[0].length;
+
+        answer = N*M + 1;
+        visited = new boolean[N][M];
+        
+        visited[0][0] = true;
+        bfs(0, 0, maps);
+        
+        if(visited[N-1][M-1]) {
+            answer = maps[N-1][M-1];
+        } else {
+            answer = -1;
+        }
+        
+        return answer;
+    }
+    
+    private void bfs(int a, int b, int[][] maps) {
+        
+        Queue<Node> qu = new LinkedList<>();
+        qu.offer(new Node(a,b));
+        
+        while(!qu.isEmpty()) {
+            Node node = qu.poll();
+            
+            int n = node.a;
+            int m = node.b;
+            
+            if(n == N-1 && m == M-1) {
+                break;
+            }
+            
+            visited[n][m] = true;
+            
+            for(int i=0; i<4; i++) {
+                
+                int nextN = n + x[i];
+                int nextM = m + y[i];
+                
+                if(nextN < 0 | nextN >=N | nextM < 0 | nextM >= M) {
+                    continue;
+                }
+                
+                if(!visited[nextN][nextM] && maps[nextN][nextM] != 0) {
+                    maps[nextN][nextM] = maps[n][m] + 1;
+                    visited[nextN][nextM] = true;
+                    qu.offer(new Node(nextN, nextM));
+                }
+            }
+        }
+        
+        
+       
     }
 }
